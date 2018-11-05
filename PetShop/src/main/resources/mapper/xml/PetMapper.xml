@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daqi.dao.PetMapper">
+  <resultMap id="BaseResultMap" type="com.daqi.entity.Pet">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="category" jdbcType="INTEGER" property="category" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="photoUrls" jdbcType="VARCHAR" property="photourls" />
+    <result column="tags" jdbcType="INTEGER" property="tags" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from pet
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.daqi.entity.Pet">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into pet (id, category, name, 
+      photoUrls, tags, status
+      )
+    values (#{id,jdbcType=INTEGER}, #{category,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{photourls,jdbcType=VARCHAR}, #{tags,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.daqi.entity.Pet">
+    update pet
+    set category = #{category,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      photoUrls = #{photourls,jdbcType=VARCHAR},
+      tags = #{tags,jdbcType=INTEGER},
+      status = #{status,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, category, name, photoUrls, tags, status
+    from pet
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, category, name, photoUrls, tags, status
+    from pet
+  </select>
+
+  <insert id="add" parameterType="int">
+    insert into
+    pet(id, category, name,
+    photoUrls, tags, status) values
+    <foreach collection="list" item="p" separator=",">
+      (#{p.id,jdbcType=INTEGER}, #{p.category,jdbcType=INTEGER}, #{p.name,jdbcType=VARCHAR},
+      #{p.photourls,jdbcType=VARCHAR}, #{p.tags,jdbcType=INTEGER}, #{p.status,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+</mapper>
